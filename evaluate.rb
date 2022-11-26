@@ -5,6 +5,7 @@ require "./array"
 require './hash'
 require './array_of_hashes'
 require './methods'
+require './decimal'
 
 class Evaluate < Minitest::Test
   def test_variables
@@ -49,5 +50,17 @@ class Evaluate < Minitest::Test
     assert(Metodos.method_defined?(:boas_vindas), 'O método boas_vindas não existe! Tenha certeza que O método boas_vindas foi criado ou digitado corretamente')
     assert_output(/Hello World!/) { metodos.hello_world }
     assert_output(/Olá Bruno! Seja bem-vindo!/) { metodos.boas_vindas('bruno') }
+  end
+
+  def test_decimal
+    decimal = Decimal.new
+    assert(Decimal.method_defined?(:retornar_decimais), 'O método retornar_decimais não existe! Tenha certeza que O método retornar_decimais foi criado ou digitado corretamente')
+    assert_output(/Unidade: 1\n/) { decimal.retornar_decimais(1) }
+    assert_output(/Dezena: 1\nUnidade: 0\n/) { decimal.retornar_decimais(10) }
+    assert_output(/Centena: 1\nDezena: 0\nUnidade: 0\n/) { decimal.retornar_decimais(100) }
+    assert_output(/Milhar: 1\nCentena: 0\nDezena: 0\nUnidade: 0\n/) { decimal.retornar_decimais(1000) }
+    assert_output(/Milhar: 4\nCentena: 5\nDezena: 6\nUnidade: 7\n/) { decimal.retornar_decimais(4567) }
+    error = assert_raises(RuntimeError) { decimal.retornar_decimais(10000) }
+    assert_equal('O valor digitado não é um valor válido! Valor digitado: 10000', error.message)
   end
 end
